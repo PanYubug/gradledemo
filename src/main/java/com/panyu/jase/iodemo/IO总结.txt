@@ -1,0 +1,64 @@
+流程
+File：IO技术用于操作设备上数据的，而数据最常见的体现方式是文件
+先了解文件的操作。
+创建、删除、存在、隐藏、获取。。。
+
+需求：怎么操作文件的数据呢？
+使用IO流对象。而且文件数据都是字节存在
+学习了可以操作文件的字节流
+InputStream
+    FileInputStream
+OutputStream
+    FileOutputStream
+
+为了提高操作效率。引入缓冲区
+InputStream
+    FileInputStream
+    FilterInputStream
+        BufferedInputStream
+OutputStream
+    FileOutStream
+    FilterOutputStream
+        BufferedOutputStream
+
+发现，文件数据，媒体文件字节流没问题
+但是对于文本文件，想要操作文件中的中文数据时，字节流只能操作字节，需要我们字节解码成字符流，
+所以就到API找对象，就发现字符流中有字节和字符的桥梁，传说中的转换流
+Reader
+    InputStreamReader：字节--》字符
+Writer
+    OutputStreamWriter：字符--》字节
+它们出现了解决了中文的编码转换问题
+为了便捷操作字符文件。找到了转换流的子类，但是它有局限性，只能操作文件，而且是默认编码。
+Reader
+    InputStreamReader：字节--》字符
+    FileReader
+Writer
+    OutputStreamWriter：字符--》字节
+    FileWriter
+为了提高字符流的操作效率。引入字符串的缓冲区
+Reader
+    InputStreamReader：字节--》字符
+    FileReader
+    BufferedReader
+Writer
+    OutputStreamWriter：字符--》字节
+    FileWriter
+    BufferedWriter
+
+IOException
+续写和换行
+read()
+readLine()
+带行号的字节符
+装饰设计模式
+Properties
+基本使用
+特点：
+1、Hashtable的子类，map集合中的方法都可以用
+2、该集合没有泛型，键值都是字符串
+3、它是一个可以持久化的属性集。键值可以存储到集合中，也可以存储到持久化的设备上。
+持久化键值对
+加载设备的数据
+流的操作规律
+流规律应用
