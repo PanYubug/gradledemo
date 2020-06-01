@@ -2,11 +2,12 @@ package com.panyu.jase.iodemo.sequenceinputstream;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 
-public class SequenceInputStream {
+public class SequenceInputStreamDemo {
 
     public static void main(String[] args) throws IOException {
 
