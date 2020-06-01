@@ -1,6 +1,8 @@
 package com.panyu;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
 
     public Person(String name, int age) {
         this.name = name;
