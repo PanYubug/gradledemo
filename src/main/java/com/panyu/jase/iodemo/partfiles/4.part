@@ -1,0 +1,134 @@
+�文件夹中必须没有内容
+        // 在删除文件夹时，应先判断是否在文件或文件夹
+        // file.isFile();
+        // file.isDirectory();
+        boolean delete = file.delete();
+        System.out.println("删除文件："+delete);
+        System.out.println("文件是否存在："+file.exists());
+
+        // 创建文件夹
+        File file1 = new File("abc");
+        boolean mkdir = file1.mkdir();
+        System.out.println(mkdir);
+        File file2 = new File("/abc/a/b/c/d/e");
+        System.out.println(file2.mkdirs());
+    }
+list和listFiles()
+public static void listAndListFile() {
+        File dir = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu");
+        String[] names = dir.list();
+        for (String name : names) {
+            System.out.println(name);
+        }
+        System.out.println("----------");
+        // 可以针对文件进行操作
+        File[] filenames = dir.listFiles();
+        for (File f : filenames) {
+            System.out.println("文件名："+f.getName()+" 文件大小："+f.length()+" 绝对路径："+f.getAbsolutePath());
+        }
+    }
+文件名过滤器
+文件过滤器
+
+FilenameFilter
+过滤器：
+// 1、后缀名过滤器
+public class FilterBySuffix implements FilenameFilter {
+
+    private String suffix;
+
+    public FilterBySuffix(String suffix) {
+        super();
+        this.suffix = suffix;
+    }
+    /**
+     * @param name 被遍历目录中的文件夹或者文件的名称
+     */
+    @Override
+    public boolean accept(File dir, String name) {
+        return name.endsWith(suffix);
+    }
+}
+
+// 2、内容过滤器
+public class FilterByContain implements FilenameFilter {
+
+    private String content;
+
+    public FilterByContain(String content) {
+        super();
+        this.content = content;
+    }
+
+    @Override
+    public boolean accept(File dir, String name) {
+        return name.contains(content);
+    }
+}
+示例：
+
+public static void fileNameFilterDemo() {
+    // 获取指定目录下.java文件 list(FilenameFilter filter);
+    File dir = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu");
+    FilenameFilter filter = new FilterBySuffix(".java");
+    // 过滤内容的过滤器，并解耦。给什么过滤器，过滤什么。
+    filter = new FilterByContain("Demo");
+    String[] names = dir.list(filter);
+    for (String name : names) {
+        System.out.println(name);
+    }
+}
+FileFilter (更常用)
+过滤器
+//文件过滤器，也可以完成FileNameFilter的功能
+public class FilterByFile implements FileFilter {
+    @Override
+    public boolean accept(File pathname) {
+        return pathname.isFile();
+        // 也是可以过滤后缀名等。
+		// return pathname.getName().endsWith(".java");
+    }
+}
+示例
+
+public static void fileFilterDemo() {
+    //文件过滤器
+    File dir = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu");
+    File[] files = dir.listFiles(new FilterByFile());
+    for (File file : files) {
+        System.out.println(file);
+    }
+}
+获取子目录中的内容
+// 遍历指定目录下的内容(包含子目录中的内容)
+public static void getAllfiles(File dir){
+    File[] files = dir.listFiles();
+    for (File file : files) {
+        if (file.isDirectory()){
+            getAllfiles(file);
+        }else {
+            System.out.println(file);
+        }
+    }
+}
+递归
+// 递归：函数自身调用自身。功能被重复使用的时候。
+// 注意：1、使用是，一定要定义条件；2、递归次数过多，会出现栈内存溢出
+public static int getSum(int num){
+    if (num==1) return 1;
+    return num + getSum(num-1);
+}
+删除目录
+public static void deleteDir(File dir){
+    File[] files = dir.listFiles();
+    for (File file : files) {
+        if (file.isDirectory()){
+            deleteDir(file);
+        }else {
+            System.out.println(file+": "+file.delete());
+        }
+    }
+    System.out.println(dir+": "+dir.delete());
+}
+需求：怎么操作文件的数据呢？
+使用IO流对象。而且文件数据都是字节存在

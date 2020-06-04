@@ -1,0 +1,92 @@
+�子，目的就是什么样子
+
+PrintWriter：一样具备打印功能
+目的：File对象，字符串路径，字节输出流，字符输出流
+
+public class PrintStreamDemo {
+    public static void main(String[] args) throws IOException {
+        System.out.println("hello world");
+        // System.out.println("hello world")，分解为两步骤。
+        PrintStream ps = System.out;
+        ps.println("hello world");
+
+        // 演示PrintStream的特有的方法
+        File file = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/printstream/printstream.txt");
+        if (!file.exists()){
+            file.createNewFile();
+        }
+        PrintStream out = new PrintStream(file);
+        out.write(97);
+        out.write("353".getBytes());
+        out.print(97); // 保证数值的表现形式，其原理就是将数值转成字符串
+        out.close();
+    }
+}
+public class PrintWriterDemo {
+    public static void main(String[] args) throws IOException {
+        //1、键盘录入
+        BufferedReader bufr = new BufferedReader(new InputStreamReader(System.in));
+        //2、定义目的
+        PrintWriter pw = new PrintWriter(System.out, true);
+        // 改变目的为文件。还想自动刷新
+//        pw = new PrintWriter(new FileWriter("1.txt"), true);
+        //3、读一行写一行，键盘录入一定要定义结束标记
+        String line = null;
+        while ((line=bufr.readLine()) != null){
+            if ("over".equals(line)){
+                break;
+            }
+            pw.println(line.toUpperCase());
+//            pw.flush(); // 当PrintWriter参数为true，println,printf,format方法会自动刷出数据
+        }
+        pw.close();
+        // bufr.close() //不需要关闭键盘录入这种标准输入流，一旦关闭，后面获取不到
+    }
+}
+序列流
+SequenceInputStream
+对多个流进行合并
+特点：流对象的有序的排列
+解决问题：将多个输入流合并成一个输入流。将多个源合并成一个源。对于多个源的操作会变的简单
+功能：特殊之处在构造函数上。一初始化就合并了多个流进来。
+使用场景之一：对多个文件进行数据的合并。多个源对应一个目的。
+
+public class SequenceInputStreamDemo {
+
+    public static void main(String[] args) throws IOException {
+
+        // 演示序列流 SequenceInputStreamDemo
+        // 如何获取一个Enumeration呢？Vector有，效率低，使用ArrayList
+        ArrayList<FileInputStream> al = new ArrayList<>();
+        // 添加三个输入流对象，和指定的文件关联
+        for (int i = 1; i < 4; i++) {
+            al.add(new FileInputStream("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/sequenceinputstream/"+i+".txt"));
+        }
+
+        // 怎么通过ArrayList获取枚举接口。可以使用Collections工具类中的方法
+        Enumeration<FileInputStream> en = Collections.enumeration(al);
+        // 创建序列流对象，需要传递Enumeration。
+        SequenceInputStream sis = new SequenceInputStream(en);
+        // 创建目的。文件
+        FileOutputStream fos = new FileOutputStream("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/sequenceinputstream/4.txt");
+        //频繁的读写操作
+        //1、创建缓冲区
+        byte[] buf = new byte[1024];
+        int len = 0;
+        while ((len=sis.read(buf))!=-1){
+            fos.write(buf, 0, len);
+        }
+
+        // 关闭流
+        fos.close();
+        sis.close();
+    }
+}
+操作对象
+ObjectInputStream与ObjectOutputStream
+被操作的对象需要实现Serializable（标记接口）
+对象的序列化和反序列化
+特点：用于操作对象
+解决问题：可以将对象进行序列化和反序列化。注意：对象序列化一定要实现Serializable接口。为了给类定义一个SeriaVersionUID。
+功能：ObjectInputStream readObject()	ObjectOutputStream writeObject()
+注意：Serializable：需要在对象上加上一个序列版本号。该版本号的目的在于�

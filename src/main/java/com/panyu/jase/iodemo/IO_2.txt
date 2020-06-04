@@ -1,0 +1,597 @@
+IO流
+介绍：
+IO流用来处理设备之间的数据传输
+Java对数据的操作时通过流（系统资源）的方式
+Java用于操作流的对象都在java.io包中
+IO：用于处理设备上的数据的。设备：内存、硬盘、光盘。
+流：系统资源，windows系统本身就可以操作设备，各种语言知识使用系统平台上的这个资源
+并对外提供了各种语言自己的操作功能，这些功能最终调用的是系统资源
+使用完资源一定要记住：释放。
+IO：Java中所涉及的功能对象都存储到java.io包中
+设备上数据最常见的存储表现形式文件file
+基本知识
+按数据流的方向不同：输入流，输出流。
+按处理数据单位不同：字节流，字符流。
+（1）字节流：数据流中最小的数据单元是字节。
+（2）字符流：数据流中最小的数据单元是字符， Java中的字符是Unicode编码，一个字符占用两个字节。
+按功能不同：节点流，处理流。
+（1）程序用于直接操作目标设备所对应的类叫节点流。
+（2）程序通过一个间接流类去调用节点流类，以达到更加灵活方便地读写各种类型的数据，这个间接流类就是处理流。
+字节流的抽象基类：
+
+InputStream，
+OutputStream
+字符流的抽象基类：
+
+Reader，
+writer
+注：由这四个类派生出来的子类名称都以其父类名作为子类名的后缀。
+如：InputStream的子类FileInputStream
+如：Reader的子类FileReader
+主要分类
+分类	字节输入流	字节输出流	字符输入流	字符输出流
+抽象类	InputStream	OutputStream	Reader	Writer
+访问文件	FileInputStream	FileOutputStream	FileReader	FileWriter
+访问数组	ByteArrayInputStream	ByteArrayOutputStream	CharArrayReader	CharArrayWriter
+访问管道	PipedInputStream	PipedOutputStream	PipedReader	PipedWriter
+访问字符串			StringReader	StringWriter
+缓冲流	BufferedInputString	BufferedOutputStream	BufferedReader	BufferedWriter
+转换流			InputStreamReader	OutputStreamWriter
+对象流	ObjectInputStream	ObjectOutputStream
+抽象基类	FilterInputStream	FilterOutputStream	FilterReader	FilterWriter
+打印流		PrintStream		PrintWriter
+推回输入流	PushbackInputStream		PushbackReader
+特殊流	DataInputStream	DataOutputStream
+注：斜体为抽象类，黄色为节点流，必须直接与指定的物理节点关联。
+
+字节流
+学习了可以操作文件的字节流
+为了提高操作效率。引入缓冲区
+InputStream
+FileInputStream
+FilterInputStream
+- BufferedInputStream
+OutputStream
+FileOutStream
+FilterOutputStream
+- BufferedOutputStream
+字符流（纯文本数据）
+Reader
+FileReader
+–BufferedReader
+Writer
+FileWriter
+–BufferedWriter
+发现，文件数据，媒体文件字节流没问题
+但是对于文本文件，想要操作文件中的中文数据时，字节流只能操作字节，需要我们字节解码成字符流，所以就到API找对象，就发现字符流中有字节和字符的桥梁，传说中的转换流。
+
+转换流
+它们出现了解决了中文的编码转换问题
+为了便捷操作字符文件。找到了转换流的子类，但是它有局限性，只能操作文件，而且是默认编码。
+为了提高字符流的操作效率。引入字符串的缓冲区
+InputStreamReader（字节–字符）
+–BufferedReader
+OutputStreamWriter（字符–字节）
+–BufferedWriter
+
+缓冲流
+缓冲区原理：临时存储数据的方法，减少对设备的操作频率，提高了效率，其实就是将数据临时存到内存（数组）中
+
+Buffered
+BufferedInputStream
+BufferedOutputStream
+BufferedReader
+BufferedWriter
+IOException
+续写和换行
+read()
+readLine()
+带行号的字节符
+装饰设计模式
+
+其他类
+打印流
+打印流，即输出流。
+
+PrintWriter（字符流）
+PrintStream（字节流）
+可以直接操作输入流和文件
+PrintStream：
+特点：打印。不抛异常
+目的：File对象，字符串路径，字节输出流
+解决问题：方便地打印各种数据值标识形式
+它的打印方法可以保证数值的表现形式不变。写的是什么样子，目的就是什么样子
+
+PrintWriter：一样具备打印功能
+目的：File对象，字符串路径，字节输出流，字符输出流
+
+public class PrintStreamDemo {
+    public static void main(String[] args) throws IOException {
+        System.out.println("hello world");
+        // System.out.println("hello world")，分解为两步骤。
+        PrintStream ps = System.out;
+        ps.println("hello world");
+
+        // 演示PrintStream的特有的方法
+        File file = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/printstream/printstream.txt");
+        if (!file.exists()){
+            file.createNewFile();
+        }
+        PrintStream out = new PrintStream(file);
+        out.write(97);
+        out.write("353".getBytes());
+        out.print(97); // 保证数值的表现形式，其原理就是将数值转成字符串
+        out.close();
+    }
+}
+public class PrintWriterDemo {
+    public static void main(String[] args) throws IOException {
+        //1、键盘录入
+        BufferedReader bufr = new BufferedReader(new InputStreamReader(System.in));
+        //2、定义目的
+        PrintWriter pw = new PrintWriter(System.out, true);
+        // 改变目的为文件。还想自动刷新
+//        pw = new PrintWriter(new FileWriter("1.txt"), true);
+        //3、读一行写一行，键盘录入一定要定义结束标记
+        String line = null;
+        while ((line=bufr.readLine()) != null){
+            if ("over".equals(line)){
+                break;
+            }
+            pw.println(line.toUpperCase());
+//            pw.flush(); // 当PrintWriter参数为true，println,printf,format方法会自动刷出数据
+        }
+        pw.close();
+        // bufr.close() //不需要关闭键盘录入这种标准输入流，一旦关闭，后面获取不到
+    }
+}
+序列流
+SequenceInputStream
+对多个流进行合并
+特点：流对象的有序的排列
+解决问题：将多个输入流合并成一个输入流。将多个源合并成一个源。对于多个源的操作会变的简单
+功能：特殊之处在构造函数上。一初始化就合并了多个流进来。
+使用场景之一：对多个文件进行数据的合并。多个源对应一个目的。
+
+public class SequenceInputStreamDemo {
+
+    public static void main(String[] args) throws IOException {
+
+        // 演示序列流 SequenceInputStreamDemo
+        // 如何获取一个Enumeration呢？Vector有，效率低，使用ArrayList
+        ArrayList<FileInputStream> al = new ArrayList<>();
+        // 添加三个输入流对象，和指定的文件关联
+        for (int i = 1; i < 4; i++) {
+            al.add(new FileInputStream("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/sequenceinputstream/"+i+".txt"));
+        }
+
+        // 怎么通过ArrayList获取枚举接口。可以使用Collections工具类中的方法
+        Enumeration<FileInputStream> en = Collections.enumeration(al);
+        // 创建序列流对象，需要传递Enumeration。
+        SequenceInputStream sis = new SequenceInputStream(en);
+        // 创建目的。文件
+        FileOutputStream fos = new FileOutputStream("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/sequenceinputstream/4.txt");
+        //频繁的读写操作
+        //1、创建缓冲区
+        byte[] buf = new byte[1024];
+        int len = 0;
+        while ((len=sis.read(buf))!=-1){
+            fos.write(buf, 0, len);
+        }
+
+        // 关闭流
+        fos.close();
+        sis.close();
+    }
+}
+操作对象
+ObjectInputStream与ObjectOutputStream
+被操作的对象需要实现Serializable（标记接口）
+对象的序列化和反序列化
+特点：用于操作对象
+解决问题：可以将对象进行序列化和反序列化。注意：对象序列化一定要实现Serializable接口。为了给类定义一个SeriaVersionUID。
+功能：ObjectInputStream readObject()	ObjectOutputStream writeObject()
+注意：Serializable：需要在对象上加上一个序列版本号。该版本号的目的在于验证序列化对象和对应类是否版本匹配。
+瞬态关键字: transient 防止某些数据被序列化
+
+RandomAccessFile
+随机访问文件，自身具备读写的方法。
+通过seek（int x）来达到随机访问
+特点：
+
+只能操作文件。
+既能读，又能写数据：
+维护了一个byte数组，内部定义了字节流的读取和写入
+功能：getFilePointer seek用于操作文件指针的方法
+通过对指针的操作可以实现对文件的任意位置的读取和写入
+随机写数据
+随机读数据
+管道流
+PipedInputStream和PipedOutputStream
+输入输出可以直接进行连接，通过结合线程使用
+特点：
+读取管道和写入管道可以连接
+需要使用多线程技术。单线程容易死锁
+connect方法
+
+操作基本类型值的流
+操作基本数据类型
+DataInputStream与DataOutputStream
+
+操作字节数组
+ByteArrayInputStream与ByteArrayOutputStream
+
+操作字符数组
+CharArrayReader与CharArrayWriter
+
+操作字符串
+StringReader与StringWriter
+
+Java输入输出流：https://blog.csdn.net/hguisu/article/details/7418161
+
+编码表
+
+ASCII
+ISO8859
+GB2312
+GBK
+Unicode：所有字节都用两个字节来表示，Java语言使用的就是unicode
+UTF-8：最多用三个字节来表示一个字符
+字节和字符的桥梁
+InputStreamReader：是字节流通向字符流的桥梁
+OutputStreamWriter：
+不同的编码表
+转换流的子类
+复制文本文件
+
+FileWriter
+FileReader
+描述文件或者文件夹的类是File。
+
+File基本方法及运用：
+File：IO技术用于操作设备上数据的，而数据最常见的体现方式是文件
+先了解文件的操作。
+创建、删除、存在、隐藏、获取。。。
+
+基本方法
+public static void BaseOperation() {
+        /**
+         * File类，常见方法
+         * 1、名字。获取名称	String getName()
+         * 2、大小。获取大小	Int length()
+         * 3、获取类型		没有
+         * 4、获取所在的目录	String getParent()
+         * 5、获取文件的绝对路径	String getAbsolutePath()
+         * 6、获取文件的路径	String getPath()
+         * 7、获取文件最后一次修改的时间，要求是x年x月x日。时间。Long lastModified()
+         * 8、文件是否隐藏的	boolean isHidden()
+         * 9、发现File对象封装的文件或者文件夹是可以存在的也可以是不存在。
+         *      那么不存在的可否用file的功能创建呢？
+         *      创建功能	boolean createNewFile()
+         *      删除功能	boolean delete()
+         * 10、一个File对象封装的文件或者文件加到底是否存在呢？
+         *      判断存在功能 file.isFile();file.isDirectory();boolean exists()
+         * 11、getFreeSpace()方法是什么意思？getTotalSpace() getUsableSpace()：返回上的分区提供给该虚拟机的字节数 named此抽象路径名
+         *      过此抽象路径名返回分区 named的大小。
+         */
+		// 构造和字段
+        File file = new File("1.txt");
+        // 获取方法的方式
+        String fileName = file.getName();
+        System.out.println("文件名："+fileName);
+        long length = file.length();
+        System.out.println("文件的大小："+length);
+        System.out.println("文件的父目录："+file.getParent());
+        System.out.println("文件的绝对路径："+file.getAbsolutePath());
+        // 获取的是file对象中的封装的路径。封装的是什么，获取到的就是什么。
+        System.out.println("文件的路径："+file.getPath());
+        System.out.println("文件的最后修改时间："+file.lastModified());
+        System.out.println("文件是否隐藏："+file.isHidden());
+        try {
+            // 如果文件存在则返回false，不存在就创建，返回true
+            boolean newFile = file.createNewFile();
+            System.out.println("创建文件："+newFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("文件是否存在："+file.exists());
+
+        // 删除文件夹时，文件夹中必须没有内容
+        // 在删除文件夹时，应先判断是否在文件或文件夹
+        // file.isFile();
+        // file.isDirectory();
+        boolean delete = file.delete();
+        System.out.println("删除文件："+delete);
+        System.out.println("文件是否存在："+file.exists());
+
+        // 创建文件夹
+        File file1 = new File("abc");
+        boolean mkdir = file1.mkdir();
+        System.out.println(mkdir);
+        File file2 = new File("/abc/a/b/c/d/e");
+        System.out.println(file2.mkdirs());
+    }
+list和listFiles()
+public static void listAndListFile() {
+        File dir = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu");
+        String[] names = dir.list();
+        for (String name : names) {
+            System.out.println(name);
+        }
+        System.out.println("----------");
+        // 可以针对文件进行操作
+        File[] filenames = dir.listFiles();
+        for (File f : filenames) {
+            System.out.println("文件名："+f.getName()+" 文件大小："+f.length()+" 绝对路径："+f.getAbsolutePath());
+        }
+    }
+文件名过滤器
+文件过滤器
+
+FilenameFilter
+过滤器：
+// 1、后缀名过滤器
+public class FilterBySuffix implements FilenameFilter {
+
+    private String suffix;
+
+    public FilterBySuffix(String suffix) {
+        super();
+        this.suffix = suffix;
+    }
+    /**
+     * @param name 被遍历目录中的文件夹或者文件的名称
+     */
+    @Override
+    public boolean accept(File dir, String name) {
+        return name.endsWith(suffix);
+    }
+}
+
+// 2、内容过滤器
+public class FilterByContain implements FilenameFilter {
+
+    private String content;
+
+    public FilterByContain(String content) {
+        super();
+        this.content = content;
+    }
+
+    @Override
+    public boolean accept(File dir, String name) {
+        return name.contains(content);
+    }
+}
+示例：
+
+public static void fileNameFilterDemo() {
+    // 获取指定目录下.java文件 list(FilenameFilter filter);
+    File dir = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu");
+    FilenameFilter filter = new FilterBySuffix(".java");
+    // 过滤内容的过滤器，并解耦。给什么过滤器，过滤什么。
+    filter = new FilterByContain("Demo");
+    String[] names = dir.list(filter);
+    for (String name : names) {
+        System.out.println(name);
+    }
+}
+FileFilter (更常用)
+过滤器
+//文件过滤器，也可以完成FileNameFilter的功能
+public class FilterByFile implements FileFilter {
+    @Override
+    public boolean accept(File pathname) {
+        return pathname.isFile();
+        // 也是可以过滤后缀名等。
+		// return pathname.getName().endsWith(".java");
+    }
+}
+示例
+
+public static void fileFilterDemo() {
+    //文件过滤器
+    File dir = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu");
+    File[] files = dir.listFiles(new FilterByFile());
+    for (File file : files) {
+        System.out.println(file);
+    }
+}
+获取子目录中的内容
+// 遍历指定目录下的内容(包含子目录中的内容)
+public static void getAllfiles(File dir){
+    File[] files = dir.listFiles();
+    for (File file : files) {
+        if (file.isDirectory()){
+            getAllfiles(file);
+        }else {
+            System.out.println(file);
+        }
+    }
+}
+递归
+// 递归：函数自身调用自身。功能被重复使用的时候。
+// 注意：1、使用是，一定要定义条件；2、递归次数过多，会出现栈内存溢出
+public static int getSum(int num){
+    if (num==1) return 1;
+    return num + getSum(num-1);
+}
+删除目录
+public static void deleteDir(File dir){
+    File[] files = dir.listFiles();
+    for (File file : files) {
+        if (file.isDirectory()){
+            deleteDir(file);
+        }else {
+            System.out.println(file+": "+file.delete());
+        }
+    }
+    System.out.println(dir+": "+dir.delete());
+}
+需求：怎么操作文件的数据呢？
+使用IO流对象。而且文件数据都是字节存在
+
+IO流的规律总结：
+明确数据源，数据目的
+操作的数据是否是纯文本数据
+明确要操作的具体设备。每个设备都有对应的流对象
+是否需要额外功能（缓存，转化流）
+解决的问题，就是开发中具体要使用哪个流对象的问题：
+
+明确数据源，数据汇（目的）
+其实就是再明确要使用的IO体系。
+InputStream, OutputStream, Reader, Writer
+需求中操作的是源：意味着是读，使用InputStream, Reader
+需求中操作的是目的：意味着是写，使用OutputStream, Writer
+
+操作的数据是否是纯文本数据？
+是，字符流；
+否，字节流；
+是，源	Reader；
+是，目的	Writer；
+通过前两个明确，明确了具体要使用的体系
+接下来应该明确具体的体系中药使用哪个对象
+
+明确要操作的具体设备。每个设备都有对应的流对象
+源设备：
+硬盘，能操作File的流对象都是。File开头
+键盘，System.in
+内存，数组
+网络，socket流
+目的设备：
+硬盘，能操作File的流对象都是。File开头
+显示器，System.out
+内存，数组
+网络，socket流
+到第三步明确就可以找到具体的流对象了
+
+需要额外功能吗？
+需要高效吗？缓存区，Buffered开头
+需要编码转换吗？转化流。
+示例
+需求1：通过键盘录入数据，将数据保存到一个文件中
+
+明确一：有源吗？有，有目的吗？有。
+源：InputStream Reaer
+目的：Outputtream Writer
+
+明确二：是纯文本数据吗？是。
+源：Reader
+目的：Writer
+
+明确三：具体设备
+源设备： System.in
+目的设备：硬盘
+
+InputStream is = System.in
+FileWriter fw = new FileWriter（“a.txt”）
+//将读取的字节存储到数组read(byte[])
+//将字节数组转成字符串
+//通过fw.writer(string)写入到文件中
+但是麻烦。因为明确源是Reader，需要将字节流转成字符流，这样操作文字就便捷了
+
+明确四：需要功能？
+需要，转换。字节–>字符。InputStreamReader
+InputStreamReader isr = new InputStreamReader(System.in)
+FileWriter fw = new FileWriter（"a.txt"）
+//一次读一个字符
+//将读到的字符写入
+//当然也可以定义字符数组缓冲区
+需求其他功能吗？
+需要，高效。Buffered
+BufferedReader bufr = new BufferedReader(new InputStreamReader(System.in));
+String s = bufr.readLine();
+BufferedWriter bufw = new BufferedWriter(new FileWriter("a.txt"));
+bufw.write(s);
+bufw.flush();
+//line = readLine();
+//bufw.writer(string); bufw.flush();
+需求2：读取文本文件中的数据，将其打印到控制台上
+
+明确一：有源吗？有，有目的吗？有。
+源：InputStream Reaer
+目的：Outputtream Writer
+
+明确二：是纯文本数据吗？是。
+源：Reader
+目的：Writer
+
+明确三：具体设备
+源设备： 硬盘File
+目的设备：显示器System.out
+
+BufferedReader bufr = new BufferedReader(new FileReader("a,txt"));
+String s1 = bufr.readLine();
+OutputStreamWriter osw = new OutputStreamWriter(System.out);
+osw.write(s1);
+osw.flush();
+
+//fr读取数据到数组中
+//使用PrintStream直接调用printIn方法就可以打印了，如果使用OutputStream可以调用Writer方法就可以将数据写入到
+显示器上
+麻烦。
+//因为源都是字符数据，可以通过字符流操作，将字符转成字节在给显示器
+需要额外功能吗？
+需要转换。字符–>字节。
+OutputStreamReader osw = new OutputStreamWriter(System.out)
+需求其他功能吗？
+需要，高效。Buffered
+
+BufferedReader bufr = new BufferedReader(new FileReader("a.txt"))
+BufferedWriter bufw = new BufferedWriter(new OutputStreamWriter(System.out))
+//读取一行数据
+//写入一行数据
+基础示例1
+
+public class FileOutputStreamDemo {
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    public static void main(String[] args) {
+        FileOutputStream fos = null;
+        try {
+            // 1、穿件字节输出流对象。用于操作文件，在对象初始化时，必须明确数据存储的目的地
+            // 注：输出流所关联的目的地，如果不存在，会自动创建；如果存在，则覆盖。
+            // (传入true实现续写)
+            fos = new FileOutputStream("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo", true);
+
+            // 2、调用输出流的写功能，字符转字节。
+            fos.write((LINE_SEPARATOR + "abcd").getBytes());
+            // 3、必须关闭，释放资源
+        } catch (IOException e) {
+            System.out.println(e.toString() + "----");
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("程序失败" + e);
+                }
+            }
+        }
+    }
+}
+附：
+
+Properties
+特点：
+
+HashTable的子类。map集合中的方法都可以用。
+该集合没有泛型，键值都是字符串。
+它是一个可以持久化的属性集。键值可以存储到集合中，也可以存储到持久化的设备上。键值对的来源也可以是持久化的设备。
+private static void methodDemo3() throws IOException {
+
+    File file = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/properties/properties_info.properties");
+
+    Properties prop = new Properties();
+
+    FileInputStream fis = new FileInputStream(file);
+
+    // 读取流和数据文件关联
+    prop.load(fis);
+    prop.setProperty("zhangsan", "18");
+    FileOutputStream fos = new FileOutputStream(file);
+    prop.store(fos, "");
+    prop.list(System.out);
+
+    fos.close();
+    fis.close();
+}

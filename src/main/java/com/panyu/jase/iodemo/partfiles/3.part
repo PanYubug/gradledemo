@@ -1,0 +1,106 @@
+�证序列化对象和对应类是否版本匹配。
+瞬态关键字: transient 防止某些数据被序列化
+
+RandomAccessFile
+随机访问文件，自身具备读写的方法。
+通过seek（int x）来达到随机访问
+特点：
+
+只能操作文件。
+既能读，又能写数据：
+维护了一个byte数组，内部定义了字节流的读取和写入
+功能：getFilePointer seek用于操作文件指针的方法
+通过对指针的操作可以实现对文件的任意位置的读取和写入
+随机写数据
+随机读数据
+管道流
+PipedInputStream和PipedOutputStream
+输入输出可以直接进行连接，通过结合线程使用
+特点：
+读取管道和写入管道可以连接
+需要使用多线程技术。单线程容易死锁
+connect方法
+
+操作基本类型值的流
+操作基本数据类型
+DataInputStream与DataOutputStream
+
+操作字节数组
+ByteArrayInputStream与ByteArrayOutputStream
+
+操作字符数组
+CharArrayReader与CharArrayWriter
+
+操作字符串
+StringReader与StringWriter
+
+Java输入输出流：https://blog.csdn.net/hguisu/article/details/7418161
+
+编码表
+
+ASCII
+ISO8859
+GB2312
+GBK
+Unicode：所有字节都用两个字节来表示，Java语言使用的就是unicode
+UTF-8：最多用三个字节来表示一个字符
+字节和字符的桥梁
+InputStreamReader：是字节流通向字符流的桥梁
+OutputStreamWriter：
+不同的编码表
+转换流的子类
+复制文本文件
+
+FileWriter
+FileReader
+描述文件或者文件夹的类是File。
+
+File基本方法及运用：
+File：IO技术用于操作设备上数据的，而数据最常见的体现方式是文件
+先了解文件的操作。
+创建、删除、存在、隐藏、获取。。。
+
+基本方法
+public static void BaseOperation() {
+        /**
+         * File类，常见方法
+         * 1、名字。获取名称	String getName()
+         * 2、大小。获取大小	Int length()
+         * 3、获取类型		没有
+         * 4、获取所在的目录	String getParent()
+         * 5、获取文件的绝对路径	String getAbsolutePath()
+         * 6、获取文件的路径	String getPath()
+         * 7、获取文件最后一次修改的时间，要求是x年x月x日。时间。Long lastModified()
+         * 8、文件是否隐藏的	boolean isHidden()
+         * 9、发现File对象封装的文件或者文件夹是可以存在的也可以是不存在。
+         *      那么不存在的可否用file的功能创建呢？
+         *      创建功能	boolean createNewFile()
+         *      删除功能	boolean delete()
+         * 10、一个File对象封装的文件或者文件加到底是否存在呢？
+         *      判断存在功能 file.isFile();file.isDirectory();boolean exists()
+         * 11、getFreeSpace()方法是什么意思？getTotalSpace() getUsableSpace()：返回上的分区提供给该虚拟机的字节数 named此抽象路径名
+         *      过此抽象路径名返回分区 named的大小。
+         */
+		// 构造和字段
+        File file = new File("1.txt");
+        // 获取方法的方式
+        String fileName = file.getName();
+        System.out.println("文件名："+fileName);
+        long length = file.length();
+        System.out.println("文件的大小："+length);
+        System.out.println("文件的父目录："+file.getParent());
+        System.out.println("文件的绝对路径："+file.getAbsolutePath());
+        // 获取的是file对象中的封装的路径。封装的是什么，获取到的就是什么。
+        System.out.println("文件的路径："+file.getPath());
+        System.out.println("文件的最后修改时间："+file.lastModified());
+        System.out.println("文件是否隐藏："+file.isHidden());
+        try {
+            // 如果文件存在则返回false，不存在就创建，返回true
+            boolean newFile = file.createNewFile();
+            System.out.println("创建文件："+newFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("文件是否存在："+file.exists());
+
+        // 删除文件夹时�

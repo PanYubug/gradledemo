@@ -1,0 +1,46 @@
+��目的地，如果不存在，会自动创建；如果存在，则覆盖。
+            // (传入true实现续写)
+            fos = new FileOutputStream("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo", true);
+
+            // 2、调用输出流的写功能，字符转字节。
+            fos.write((LINE_SEPARATOR + "abcd").getBytes());
+            // 3、必须关闭，释放资源
+        } catch (IOException e) {
+            System.out.println(e.toString() + "----");
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("程序失败" + e);
+                }
+            }
+        }
+    }
+}
+附：
+
+Properties
+特点：
+
+HashTable的子类。map集合中的方法都可以用。
+该集合没有泛型，键值都是字符串。
+它是一个可以持久化的属性集。键值可以存储到集合中，也可以存储到持久化的设备上。键值对的来源也可以是持久化的设备。
+private static void methodDemo3() throws IOException {
+
+    File file = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/iodemo/properties/properties_info.properties");
+
+    Properties prop = new Properties();
+
+    FileInputStream fis = new FileInputStream(file);
+
+    // 读取流和数据文件关联
+    prop.load(fis);
+    prop.setProperty("zhangsan", "18");
+    FileOutputStream fos = new FileOutputStream(file);
+    prop.store(fos, "");
+    prop.list(System.out);
+
+    fos.close();
+    fis.close();
+}
