@@ -48,5 +48,6 @@ dependencies {
     providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
 
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
 
 }
