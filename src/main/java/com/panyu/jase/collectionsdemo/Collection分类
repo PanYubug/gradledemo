@@ -1,0 +1,119 @@
+Collection
+    |--Iterable
+    |--Collection
+        |--List
+            |--Vector
+            |--ArrayList
+            |--LinkedList
+        |--Set
+            |--HashSet
+            |--LinkedHashSet
+            |--SortedSet
+                |--TreeSet
+        |--Queue
+        |--Dequeue
+    |--Map
+        |--HashMap
+        |--HashTable
+        |--SortedMap
+            |--TreeMap
+
+
+Vector
+    底层使用采用数组存储
+    同步，线程安全
+
+ArrayList
+    底层使用采用数组存储，插入和删除元素的时间复杂度受元素位置的影响
+    不同步，线程不安全
+    支持快速随机访问就是通过元素的序号快速获取元素对象(对应于get(int index)方法)，用于频繁的查找工作
+    空间浪费主要体现在在list列表的结尾会预留一定的容量空间
+
+
+LinkedList
+    底层使用双向链表存储，插入和删除元素时间复杂度不受元素位置的影响，近似 O(1)，指定位置i插入和删除元素的话（(add(int index, E element)） 时间复杂度近似为o(n))因为需要先移动到指定位置再插入。
+    不同步，线程不安全
+    插入和删除元素时间复杂度不受元素位置的影响，近似 O(1)，指定位置i插入和删除元素的话（(add(int index, E element)） 时间复杂度近似为o(n))因为需要先移动到指定位置再插入。
+    不支持高效的随机元素访问
+
+HashMap
+    当链表长度大于阈值（默认为 8）（将链表转换成红黑树前会判断，如果当前数组的长度小于 64，那么会选择先进行数组扩容，而不是转换为红黑树）时，将链表转化为红黑树，以减少搜索时间
+
+LinkedHashMap
+    继承自 HashMap，所以仍然是基于拉链式散列结构即由数组和链表或红黑树组成。另外，LinkedHashMap 在上面结构的基础上，增加了一条双向链表，使得上面的结构可以保持键值对的插入顺序。同时通过对链表进行相应的操作，实现了访问顺序相关逻辑。
+
+Hashtable
+    数组+链表组成的，数组是 HashMap 的主体，链表则是主要为了解决哈希冲突而存在的
+
+TreeMap
+    红黑树（自平衡的排序二叉树）
+
+
+HashSet
+    无序，唯一
+    基于 HashMap 实现的，底层采用 HashMap 来保存元素
+
+LinkedHashSet
+    是HashSet的子类，并且其内部是通过 LinkedHashMap 来实现的。有点类似于我们之前说的 LinkedHashMap 其内部是基于 HashMap 实现一样，不过还是有一点点区别的
+
+TreeSet
+    有序，唯一
+    红黑树(自平衡的排序二叉树)
+
+
+
+方法汇总：
+Collection的功能概述
+
+A:添加功能
+
+boolean add(Object obj):添加一个元素
+boolean addAll(Collection c):添加一个集合的元素
+
+B:删除功能
+
+void clear():移除所有元素
+boolean remove(Object o):移除一个元素
+boolean removeAll(Collection c):移除一个集合的元素，只要有一个元素被移除了，就返回true。
+
+C:判断功能
+
+boolean contains(Object o)：判断集合中是否包含指定的元素
+boolean containsAll(Collection c)：判断集合中是否包含指定的集合元素，只有包含所有的元素，才叫包含
+boolean isEmpty()：判断集合是否为空
+
+D:获取功能
+
+Iterator<E> iterator()(重点)
+
+E:长度功能
+
+int size():元素的个数
+
+面试题：数组有没有length()方法呢?字符串有没有length()方法呢?集合有没有length()方法呢?
+
+F:交集(了解)
+
+boolean retainAll(Collection c): 假设有两个集合A，B。A对B做交集，最终的结果保存在A中，B不变。返回值表示的是A是否发生过改变。
+
+G:把集合转数组(了解)
+
+Object[] toArray()
+
+Collection集合的遍历
+
+A:把集合转数组(了解)
+
+B:迭代器(集合专用方式)
+
+迭代器
+
+A:Iterator iterator():迭代器，集合的专用遍历方式
+
+B:Object next():获取元素,并移动到下一个位置。
+
+NoSuchElementException：没有这样的元素，因为你已经找到最后了。不要多次使用it.next()方法
+
+C:boolean hasNext():如果仍有元素可以迭代，则返回 true
+
+
