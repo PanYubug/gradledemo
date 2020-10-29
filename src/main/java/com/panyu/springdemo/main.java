@@ -1,6 +1,6 @@
 package com.panyu.springdemo;
 
-import com.panyu.demo.soundsystem.Person;
+import com.panyu.springdemo.soundsystem.Person;
 
 public class main {
     public static void main(String[] args) {

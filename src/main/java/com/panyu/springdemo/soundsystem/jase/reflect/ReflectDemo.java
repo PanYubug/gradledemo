@@ -1,7 +1,7 @@
 package com.panyu.springdemo.soundsystem.jase.reflect;
 
 
-import com.panyu.demo.soundsystem.Person;
+import com.panyu.springdemo.soundsystem.Person;
 
 public class ReflectDemo {
 

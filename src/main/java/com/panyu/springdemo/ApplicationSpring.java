@@ -1,6 +1,6 @@
 package com.panyu.springdemo;
 
-import com.panyu.demo.soundsystem.CompactDisc;
+import com.panyu.springdemo.soundsystem.CompactDisc;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ApplicationSpring {

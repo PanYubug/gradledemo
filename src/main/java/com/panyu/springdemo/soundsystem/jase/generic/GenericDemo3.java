@@ -1,7 +1,7 @@
 package com.panyu.springdemo.soundsystem.jase.generic;
 
 
-import com.panyu.demo.soundsystem.Student;
+import com.panyu.springdemo.soundsystem.Student;
 
 public class GenericDemo3 {
     public static void main(String[] args) {

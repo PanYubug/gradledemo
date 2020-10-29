@@ -1,7 +1,7 @@
 package com.panyu.springdemo.soundsystem.jase.collectiondemo;
 
 
-import com.panyu.demo.soundsystem.Employee;
+import com.panyu.springdemo.soundsystem.Employee;
 
 import java.util.HashMap;
 import java.util.Map;

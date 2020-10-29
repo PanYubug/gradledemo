@@ -1,7 +1,7 @@
 package com.panyu.springdemo.soundsystem.jase.setdemo;
 
 
-import com.panyu.demo.soundsystem.Student;
+import com.panyu.springdemo.soundsystem.Student;
 
 import java.util.Comparator;
 

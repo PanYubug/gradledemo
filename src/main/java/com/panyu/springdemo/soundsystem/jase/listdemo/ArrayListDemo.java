@@ -1,11 +1,11 @@
 package com.panyu.springdemo.soundsystem.jase.listdemo;
 
 
-import com.panyu.demo.soundsystem.Person;
+import com.panyu.springdemo.soundsystem.Person;
 
 import java.util.ArrayList;
 
-import static com.panyu.demo.soundsystem.jase.listdemo.ArrayListDemo2.singleElement2;
+import static com.panyu.springdemo.soundsystem.jase.listdemo.ArrayListDemo2.singleElement2;
 
 
 public class ArrayListDemo {

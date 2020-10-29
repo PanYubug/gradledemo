@@ -1,7 +1,7 @@
 package com.panyu.springdemo.soundsystem.jase.generic;
 
 
-import com.panyu.demo.soundsystem.Person;
+import com.panyu.springdemo.soundsystem.Person;
 
 import java.util.Set;
 import java.util.TreeSet;

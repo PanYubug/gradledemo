@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+    default-autowire="byName">
+
+    <!--设值注入-->
+    <bean id="injectionDAO" class="com.panyu.demo.injectionmode.InjectionDAO"></bean>
+    <bean id="injectionService" class="com.panyu.demo.injectionmode.InjectionService">
+        <property name="injectionDAO" ref="injectionDAO"/>
+    </bean>
+
+    <!--构造注入-->
+    <bean id="injectionDAO2" class="com.panyu.demo.injectionmode.InjectionDAO2"></bean>
+    <bean id="injectionService2" class="com.panyu.demo.injectionmode.InjectionService2">
+        <constructor-arg name="injectionDAO2" ref="injectionDAO2"/>
+    </bean>
+
+    <!--自动装配-->
+    <bean id="autoWireDAO" class="com.panyu.demo.injectionmode.AutoWireDAO"></bean>
+    <bean id="autoWireService" class="com.panyu.demo.injectionmode.AutoWireService"></bean>
+
+
+
+</beans>
