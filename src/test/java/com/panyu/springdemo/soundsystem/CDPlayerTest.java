@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:config/springconfig/applicationContext.xm_-constructor.xml")
+@ContextConfiguration("classpath:config/springconfig/applicationContext_xm_-constructor.xml")
 public class CDPlayerTest {
 
     @Autowired
