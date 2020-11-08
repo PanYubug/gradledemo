@@ -1,56 +1,88 @@
 package com.panyu.springdemo.soundsystem.jase.reflect;
 
 
-import com.panyu.springdemo.soundsystem.Person;
+import com.panyu.dao.Person;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class ReflectDemo {
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        /*
-         * 反射技术：动态的获取类以及类中的成员，并可以调用该类的成员
-         * 以前是有什么类，就new什么类，没有类，给什么类就new什么类
-         *
-         * 最重要的一点是，先获取class类的引用
-         *
-         * 无论获取什么对象，都需要获取字节码文件，
-         * 如何获取？
-         *   发现java已经对字节码文件进行了描述，用的Class类完成的
-         *
-         * */
+    public static void main(String[] args) throws Exception {
 
-        //获取class对象的
-        //方法一 object getClass发现在反射技术里，该方法不合适，反射技术是不明确具体类的
-
-        //方法二 所有的数据类型都有自己的Class对象，便是方式很简单
-        //每一个数据类型都有一个默认的静态的属性。.class，用该属性就可以获取字节码文件对象
-        //虽然不用对象调用了，还是要用具体的类调用静态属性
-
-        //*********方法三 在Class中找到了forName方法，通过名称就可以获取字节码文件对象。重点
-
-//        methodDemo_1();
-//        methodDemo_2();
-        methodDemo_3();
-    }
-
-    private static void methodDemo_3() throws ClassNotFoundException {
-
-        String name = "cn.panyu.domain.Person";
+        String name = "com.panyu.dao.Person";
         Class clazz = Class.forName(name);
-        System.out.println(clazz);
+        System.out.println("clazz的反射类为：" + clazz);
+        // 获取构造函数
+        // 1、获取构造函数,默认构造函数
+        Object person = clazz.newInstance();
+        System.out.println("clazz默认构造函数为： " + person.toString());
+        // 2、获取指定构造函数
+        Constructor constructor = clazz.getConstructor(String.class, int.class);
+        Person zhangsan = (Person) constructor.newInstance("zhangsan", 22);
+        System.out.println("zhangsan的实例为： " + zhangsan.toString());
+        // 3、获取所有的构造函数
+        Constructor[] constructors = clazz.getConstructors();
+        System.out.print("clazz的构造函数的参数有：");
+        for (Constructor constructor1 : constructors) {
+            Class[] clazzList = constructor1.getParameterTypes();
+            for (Class clazz1 : clazzList) {
+                System.out.println(clazz1.getName());
+            }
+        }
+        // 获取字段
+        // 1、只能拿到public
+        Field fieldName = clazz.getField("name");
+        System.out.print("name: " + fieldName);
+        System.out.println("value：" + fieldName.get(zhangsan));
+        // 2、获取指定字段
+        Field fieldAge = clazz.getDeclaredField("age");
+        System.out.print("age: " + fieldAge);
+        // 2.1 暴力获取
+        fieldAge.setAccessible(true);
+        System.out.println("value：" + fieldAge.get(zhangsan));
+        // 3、获取所有字段
+        Field[] fields = clazz.getDeclaredFields();
+        System.out.println("clazz的所有字段有：");
+        for (Field field1 : fields) {
+            System.out.println(field1);
+        }
+        // 获取方法
+        // 1、获取指定方法
+        Class<?> aClass = Class.forName("com.panyu.springdemo.soundsystem.jase.reflect.ReflectDemo");
+        Method methodReflect = aClass.getDeclaredMethod("reflectMethod", String.class, int.class);
+        System.out.println("reflectMethod：" + methodReflect);
+        // 2、获取所有方法
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        System.out.println("clazz方法有：");
+        for (Method declaredMethod : declaredMethods) {
+            System.out.print(declaredMethod);
+            System.out.println("返回参数：" + declaredMethod.getReturnType());
+            Class<?>[] parameterTypes = declaredMethod.getParameterTypes();
+            for (Class<?> parameterType : parameterTypes) {
+                System.out.println("入参：" + parameterType);
+            }
+        }
+        // 调用方法
+        Method reflectMethod = aClass.getDeclaredMethod("reflectMethod", String.class, int.class);
+        reflectMethod.invoke(aClass.newInstance(), "李四", 33);
+        // 3、暴力获取值
+
+
+        Class superClass = clazz.getSuperclass();
+        System.out.println("clazz的父类为：" + superClass.getName());
+        Class[] interfaces = clazz.getInterfaces();
+        System.out.println("clazz实现的接口有：");
+        for (Class anInterface : interfaces) {
+            System.out.println(anInterface.getName());
+        }
     }
 
 
-    public static void methodDemo_1(){
-        //调用getclass先有对象
-        Person p = new Person();
-        Class clazz = p.getClass();
-        System.out.println(clazz);
+    private void reflectMethod(String name, int age) {
+        System.out.print("反射机制，调用方法——");
+        System.out.println("name：" + name + "，age:" + age);
     }
-
-    public static void methodDemo_2(){
-        Class clazz = Person.class;
-        Class clazz2 = Person.class;
-    }
-
 
 }

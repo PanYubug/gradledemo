@@ -1,4 +1,4 @@
-package com.panyu;
+package com.panyu.dao;
 
 import java.io.Serializable;
 
@@ -11,6 +11,9 @@ import java.io.Serializable;
 public class Person implements Serializable {
 
     private static final long serialVerionUID = 12334L;
+
+    public Person() {
+    }
 
     public Person(String name, int age) {
         this.name = name;
@@ -25,9 +28,10 @@ public class Person implements Serializable {
                 '}';
     }
 
-    private String name;
+    public String name;
     // 不序列化age
     private transient int age;
+
 
     public String getName() {
         return name;
@@ -44,7 +48,6 @@ public class Person implements Serializable {
     public void setAge(int age) {
         this.age = age;
     }
-
 
 
 }

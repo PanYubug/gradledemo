@@ -1,6 +1,6 @@
 package com.panyu.jase.iodemo.objectstream;
 
-import com.panyu.Person;
+import com.panyu.dao.Person;
 
 import java.io.*;
 

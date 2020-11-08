@@ -1,6 +1,6 @@
 package com.panyu.jase.collectionsdemo;
 
-import com.panyu.Person;
+import com.panyu.dao.Person;
 
 import java.util.ArrayList;
 import java.util.Iterator;
