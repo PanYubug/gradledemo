@@ -3,6 +3,9 @@ package com.panyu.quartzdemo;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 public class QuartsDemo {
@@ -47,6 +50,10 @@ public class QuartsDemo {
             JobDetail job = JobBuilder.newJob(SimpleJob.class)
                     .withIdentity("job1", "group1")
                     .build();
+            // 3.1 传递参数
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("hello", "quartz");
+            job.getJobDataMap().put("data", data);
             // 4、创建触发器：触发事件、触发条件等
             SimpleTrigger trigger = TriggerBuilder.newTrigger()
                     .withIdentity("trigger1", "group1")
