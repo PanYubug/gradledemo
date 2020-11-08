@@ -1,4 +1,4 @@
-package com.panyu.springdemo.soundsystem.jase.reflect;
+package com.panyu.jase.reflect;
 
 import java.lang.reflect.Field;
 

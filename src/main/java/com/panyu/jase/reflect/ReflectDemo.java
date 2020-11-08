@@ -1,4 +1,4 @@
-package com.panyu.springdemo.soundsystem.jase.reflect;
+package com.panyu.jase.reflect;
 
 
 import com.panyu.dao.Person;
@@ -50,7 +50,7 @@ public class ReflectDemo {
         }
         // 获取方法
         // 1、获取指定方法
-        Class<?> aClass = Class.forName("com.panyu.springdemo.soundsystem.jase.reflect.ReflectDemo");
+        Class<?> aClass = Class.forName("com.panyu.jase.reflect.ReflectDemo");
         Method methodReflect = aClass.getDeclaredMethod("reflectMethod", String.class, int.class);
         System.out.println("reflectMethod：" + methodReflect);
         // 2、获取所有方法
