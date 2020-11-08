@@ -16,8 +16,8 @@ public class NoteBookMain {
         //通过反射来解决问题
 
         //对外提供配置文件
-        File configFile = new File("usb.properties");
-        if (!configFile.exists()){
+        File configFile = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/jase/reflect/usb.properties");
+        if (!configFile.exists()) {
             configFile.createNewFile();
         }
 
@@ -27,16 +27,15 @@ public class NoteBookMain {
 
         //将六中的数据加载到prop
         prop.load(fis);
-        for (int i = 1; i < prop.size(); i++) {
-            String className = prop.getProperty("usb"+i);
-
-            Class clazz = Class.forName(className);
-            USB usb = (USB)clazz.newInstance();
+        for (int i = 0; i < prop.size(); i++) {
+            String className = prop.getProperty("usb" + i);
+            Class clazz = Class.forName("com.panyu.jase.reflect."+className);
+            USB usb = (USB) clazz.newInstance();
             book.useUSB(usb);
-            
+
         }
         fis.close();
-        
+
 
     }
 }

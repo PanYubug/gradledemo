@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 /**
- * Person类的对象如果需要徐硫化，就需要实现Serializable标记接口。
+ * Person类的对象如果需要序列化，就需要实现Serializable标记接口。
  * 该接口给需要序列化的类，提供了一个序列版本号，serialVerionUID
  * 该版本号的目的在于验证序列化对象和对应类是否版本匹配。
  */
