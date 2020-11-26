@@ -1,0 +1,157 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+
+
+
+
+<suite name="测试套件">
+    <test name="其他功能">
+        <classes>
+            <class name="com.panyu.mytestng.OtherTest" />
+        </classes>
+    </test>
+</suite>
+
+
+<!--<suite name="测试套件">-->
+    <!--<AnnotationDemo name="参数化测试">-->
+        <!--<parameter name="add1" value="2"/>-->
+        <!--<parameter name="add2" value="3"/>-->
+        <!--<parameter name="result" value="5"/>-->
+        <!--<classes>-->
+            <!--<class name="com.panyu.mytestng.DataParameterTest" />-->
+        <!--</classes>-->
+    <!--</AnnotationDemo>-->
+<!--</suite>-->
+
+
+<!--<suite name="测试套件">-->
+    <!--<AnnotationDemo name="顺序测试">-->
+        <!--<classes>-->
+            <!--<class name="com.panyu.mytestng.CaseRunTest" >-->
+                <!--<methods>-->
+                    <!--<include name="testCase3" />-->
+                    <!--<include name="testCase1" />-->
+                    <!--<include name="testCase2" />-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</AnnotationDemo>-->
+<!--</suite>-->
+
+
+<!--<suite name="测试套件">-->
+    <!--<AnnotationDemo name="简单测试">-->
+        <!--<groups>-->
+            <!--<run>-->
+                <!--<include name="功能测试" />-->
+                <!--<exclude name="异常" />-->
+            <!--</run>-->
+        <!--</groups>-->
+        <!--<classes>-->
+            <!--<class name="com.panyu.mytestng.TagTest" />-->
+        <!--</classes>-->
+    <!--</AnnotationDemo>-->
+<!--</suite>-->
+
+
+
+<!--<suite name="测试套件" verbose="1">-->
+    <!--<AnnotationDemo name="简单测试">-->
+        <!--<classes>-->
+            <!--<class name="com.panyu.mytestng.FirstTest">-->
+                <!--<methods>-->
+                    <!--<include name="testCase" />-->
+                <!--</methods>-->
+            <!--</class>-->
+            <!--<class name="com.panyu.mytestng.FixtureTest" />-->
+        <!--</classes>-->
+    <!--</AnnotationDemo>-->
+<!--</suite>-->
+
+
+<!--<suite name="测试套件" verbose="1" >-->
+    <!--<AnnotationDemo name="简单测试">-->
+        <!--<packages>-->
+            <!--<package name="com.panyu.mytestng" />-->
+        <!--</packages>-->
+    <!--</AnnotationDemo>-->
+<!--</suite>-->
+
+<!--<suite name="测试嵌套">-->
+    <!--<AnnotationDemo name="fixture">-->
+        <!--<classes>-->
+            <!--<class name="com.panyu.mytestng.FixtureTest" />-->
+            <!--<class name="com.panyu.mytestng.FirstTest" />-->
+        <!--</classes>-->
+    <!--</AnnotationDemo>-->
+<!--</suite>-->
+
+
+<!--
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" > 必须要添加，表示遵循的规范文件。
+1、测试套件
+<suite>...</suite> 表示定义了的一个测试套件。
+    name 定义测试套件的名称。
+    verbose 定义命令行信息打印等级，不会影响测试报告输出内容；可选值(1|2|3|4|5)
+
+2、测试名称
+<AnnotationDemo>...</AnnotationDemo> 表示定义了一个测试。
+    name 定义测试的名称。
+
+3、测试类
+<classes>...</classes> 表示定义一组测试类。
+<class .../> 表示定义一个测试类。
+    name 指定要运行的测试类
+
+4、测试包
+<packages>...</packages> 定义一组测试包。
+<package.../> 定义一个测试包。
+    name 指定测试包（目录）的名称。
+
+5、测试方法
+<methods>...</methods> 定义一组测试方法。
+<include.../> 指定包含的测试用例（方法）。
+    name 指定测试用例（方法）的名称。
+
+6、用例分组
+<groups>...</groups> 测试组标签。
+<run>...</run> 运行测试。
+<exclude> 根据groups的设置，排除不执行的用例。
+<include> 根据groups的设置，指定执行的测试用例。
+
+
+7、用例顺序
+preserve-order 参数用于控制测试用例的执行顺序。如果为：true，测试用例的顺序为：testCase3 > testCase1 > testCase2。
+如果为:false ，那么默认会按照用例的名称的有字母/数字的顺序执行：testCase1 > testCase2 > testCase3。
+
+8、测试依赖
+方法依赖：dependsOnMethods 来设置用例的依赖，当 testAdd1() 运行失败时，则 testAdd2() 不再被执行。
+测试组依赖：dependsOnGroups 来设置组的依赖，testAdd1()和 testAdd2() 同属于于 funtest组，testAdd3() 依赖于funtest组，该组有中有一条用例运行失败，则testAdd3() 不再执行。
+
+9、参数化测试
+9.1、通过 @Parameters 实现参数化
+<parameter.../> 定义测试数据
+name 定义数据的名字，在测试用例中通过该名字来获取对应的vlaue。
+value 定义测试数据，通过对应的name来获取该值。
+9.2、通过 @DataProvider 实现参数化
+@DataProvider 定义对象数组，数组的名称为：add 。
+
+10、多线程运行用例
+parallel 设置多线程的级别划分。 * parallel="methods": TestNG将在不同的线程中运行所有的测试方法。依赖方法也将在单独的线程中运行，但它们将尊重你指定的顺序。
+
+parallel="tests": TestNG 将在同一个线程中运行相同的标记的所有方法，但是每个标记将在一个单独的线程中。这允许你将所有非线程安全的类分组在同一个中，并保证它们将在同一个线程中运行，同时利用尽可能多的线程来运行测试。
+parallel="classes": TestNG将在同一个线程中运行同一个类中的所有方法，但是每个类都将在一个单独的线程中运行。
+parallel="instances": TestNG将在同一个线程中运行相同实例中的所有方法，但是在两个不同实例上的两个方法将在不同的线程中运行。
+
+thread-count 用于指定线程的个数。
+
+11、跳过用例、用例超时、预设用例抛出异常
+enabled 设置用例是否跳过执行，默认为：true ，表示不跳过。false 表示跳过执行。
+timeOut 设置用例运行的超时间，3000 单位为毫秒，当用例运行时间超过 3000 毫秒则判定为失败。不管用例本身是否运行失败。
+expectedExceptions 用来预设用例运行会出现的异常。例如 2/0 将会抛出 RuntimeException 类型的异常，如果出现异常则表示用例执行成功。
+
+12、TestNG自带报告
+
+
+-->

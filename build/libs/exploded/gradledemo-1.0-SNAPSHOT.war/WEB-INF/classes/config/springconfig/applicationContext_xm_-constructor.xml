@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <context:component-scan base-package="com.panyu.springdemo"/>
+
+    <bean id="music1" class="com.panyu.springdemo.soundsystem.Music">
+        <constructor-arg value="I Do 1"/>
+        <constructor-arg value="270"/>
+    </bean>
+
+    <bean id="music2" class="com.panyu.springdemo.soundsystem.Music">
+        <constructor-arg value="I Do 2"/>
+        <constructor-arg value="470"/>
+    </bean>
+    <bean id="music3" class="com.panyu.springdemo.soundsystem.Music">
+        <constructor-arg value="I Do 3"/>
+        <constructor-arg value="340"/>
+    </bean>
+
+
+    <bean id="compactDisc1" class="com.panyu.springdemo.soundsystem.CompactDisc">
+        <constructor-arg name="title" value="I Do"/>
+        <constructor-arg name="artist" value="莫文蔚"/>
+        <constructor-arg name="tracks">
+            <array>
+                <!--<value>I Do1</value>-->
+                <!--<value>I Do2</value>-->
+                <!--<value>I Do3</value>-->
+                <ref bean="music1"/>
+                <ref bean="music2"/>
+                <ref bean="music3"/>
+                <ref bean="music3"/>
+                <!--<entry key="m1" value-ref="music1"/>-->
+                <!--<entry key="m2" value-ref="music2"/>-->
+                <!--<entry key="m3" value-ref="music3"/>-->
+            </array>
+        </constructor-arg>
+    </bean>
+    <bean id="compactDisc2" class="com.panyu.springdemo.soundsystem.CompactDisc" c:title="周杰伦的床边故事" c:artist="周杰伦"/>
+    <bean id="compactDisc3" class="com.panyu.springdemo.soundsystem.CompactDisc"
+          c:_0="周杰伦的床边故事"
+          c:_1="周杰伦"/>
+
+    <bean id="cdPlayer1" class="com.panyu.springdemo.soundsystem.CDPlayer">
+        <constructor-arg ref="compactDisc1"/>
+    </bean>
+
+    <bean id="cdPlayer2" class="com.panyu.springdemo.soundsystem.CDPlayer" c:cd-ref="compactDisc2"></bean>
+    <bean id="cdPlayer3" class="com.panyu.springdemo.soundsystem.CDPlayer" c:_0-ref="compactDisc2"></bean>
+
+    <bean id="notepad" class="com.panyu.springdemo.Notepad" scope="singleton" lazy-init="true"
+          destroy-method="destroy"
+          init-method="init"/>
+
+    <!--静态工厂-->
+    <bean id="person1" class="com.panyu.springdemo.soundsystem.PersonFactory" factory-method="createPerson1" />
+    <!--实例工厂-->
+    <bean id="personFactory" class="com.panyu.springdemo.soundsystem.PersonFactory"/>
+    <bean id="person2" factory-bean="personFactory" factory-method="createPerson2"/>
+</beans>
