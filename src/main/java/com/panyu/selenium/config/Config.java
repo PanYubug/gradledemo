@@ -2,7 +2,7 @@ package com.panyu.selenium.config;
 
 public enum Config {
     CHROME_DRIVER("webdriver.chrome.driver"),
-    EXE("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/selenium/config/chromedriver"),
+    APPlICATION("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/selenium/config/chromedriver"),
     USERNAME(""),
     PASSWORD(""),
     ;

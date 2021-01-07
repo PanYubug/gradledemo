@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class OpenDemo {
     public static void main(String[] args) {
+        // 有时，不能启动driver可以试试看这个设置，windows系统会出现
+//        System.setProperty(Config.CHROME_DRIVER.getName(),Config.APPlICATION.getName());
         ChromeDriver dr = new ChromeDriver();
         dr.get("https://www.baidu.com");
         // 复杂的

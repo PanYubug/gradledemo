@@ -24,7 +24,8 @@ WebDriver提供了三种切换到框架的方式：
     driver.switchTo().defaultContent();
 
 
-、window管理
+https://www.selenium.dev/documentation/en/webdriver/page_loading_strategy/
+一、window管理
 1、获取浏览器窗口的大小（以像素为单位）
 //Access each dimension individually
 int width = driver.manage().window().getSize().getWidth();
@@ -74,6 +75,172 @@ public class SeleniumTakeScreenshot {
         // 执行脚本。在所选框架或窗口的当前上下文中执行JavaScript代码段。
     }
 }
+
+二、等待wait
+1、显示等待
+    可以它看成是局部变量，作用于指定元素
+2、隐式等待
+    可以把隐式等待当做全局变量，它影响整个页面，所以程序需要等待整个页面加载完成（就是浏览器标签栏那个小圈不再转）时，才会执行下一步【页面加载完成，才能执行下一步】
+    但可能页面加载未完成的时候，需要定位的元素已经加载完成了，但受限于某些JS文件、图片加载特别慢，我们不能执行下一步，必须得等到网页所有东西都加载完了才能下一步【增加不必要的加载时间】
+3、流畅等待
+
+三、代理
+四、页面加载策略
+1、normal正常
+2、eager
+3、none
+
+五、查找元素
+1、driver.findElement()
+    使用ID, Name, Class, XPath, CSS Selectors, link Text返回第一个匹配的单个WebElement引用，该引用可用于将来的元素操作
+
+2、driver.findElements()
+    返回匹配的WebElement列表
+3、在元素中查找元素
+    它用于在父元素的上下文中查找子元素
+4、在元素中查找元素列表
+    用于跟踪（或）查找当前浏览上下文中具有焦点的DOM元素
+    // Get attribute of current active element
+    String attr = driver.switchTo().activeElement().getAttribute("title");
+5、判断是否启用元素
+    此方法用于检查网页上启用或禁用了连接的元素。返回一个布尔值
+    driver.findElement(By.name("btnK")).isEnabled();
+6、判断是否选择了元素
+    此方法广泛用于复选框，单选按钮，输入元素和选项元素。
+    boolean value = driver.findElement(By.cssSelector("input[type='checkbox']:first-of-type")).isSelected();
+7、获取标签名
+    String value = driver.findElement(By.cssSelector("h1")).getTagName();
+8、获取引用元素的尺寸和坐标
+    包括：元素左上角的X轴位置、元素左上角的y轴位置、元素高度、元素宽度
+    Rectangle res =  driver.findElement(By.cssSelector("h1")).getRect();
+9、获取元素CSS值
+    String cssValue = driver.findElement(By.linkText("More information...")).getCssValue("color");
+10、获取元素文本
+    String text = driver.findElement(By.cssSelector("h1")).getText();
+
+
+六、键盘事件
+1、sendKeys()
+    输入
+    driver.findElement(By.name("q")).sendKeys("q" + Keys.ENTER);
+2、keyDown()
+    模拟按下修改键（CONTROL，SHIFT，ALT）的动作
+    Actions actionProvider = new Actions(driver);
+    Action keydown = actionProvider.keyDown(Keys.CONTROL).sendKeys("a").build();
+    keydown.perform();
+3、keyUp()
+    清除可编辑元素的内容。这仅适用于可编辑且可交互的元素，否则Selenium返回错误
+    WebElement searchInput = driver.findElement(By.name("q")).sendKeys("selenium").searchInput.clear();
+
+七、远程webDriver
+1、远程WebDriver服务器
+    （1）从命令行启动服务器
+    下载完成后 selenium-server-standalone-{VERSION}.jar，将其放置在要测试的浏览器上的计算机上。然后，从带有jar的目录中运行以下命令：
+    java -jar selenium-server-standalone-{VERSION}.jar
+    （2）运行服务器的注意事项
+       调用者应正确终止每个会话，调用其中一个 Selenium#stop() 要么 WebDriver#quit。
+       selenium服务器保留每个正在进行的会话的内存日志，这些日志将在以下时间清除 Selenium#stop() 要么 WebDriver#quit。如果您忘记终止这些会话，则服务器可能会泄漏内存。如果您保持长时间运行的会话，则可能需要不时停止/退出（或使用-Xmx jvm选项增加内存）。
+    （3）服务器有两个不同的超时，可以设置如下：
+    java -jar selenium-server-standalone-{VERSION}.jar -timeout=20 -browserTimeout=60
+    timeout：控制在收回会话之前允许客户端离开的时间（以秒为单位的值）。（2.21之后不支持）
+    browserTimeout：控制允许浏览器挂起的时间（以秒为单位的值）。
+    请注意 browserTimeout 当普通的超时机制失败时，它用作备份超时机制，通常应在网格/服务器环境中使用该机制，以确保崩溃/丢失的进程不会停留太长时间，从而污染了运行时环境。
+    （4）以编程方式配置服务器
+       从理论上讲，该过程就像映射 DriverServlet 链接到URL，但也可以将页面托管在完全由代码配置的轻量级容器（如Jetty）中。
+       下载 selenium-server.zip 然后打开包装。
+       将JAR放在CLASSPATH上。
+       创建一个名为 AppServer。在这里，我们正在使用Jetty，因此您需要下载 以及：
+    public class AppServer {
+      private Server server = new Server();
+
+      public AppServer() throws Exception {
+        WebAppContext context = new WebAppContext();
+        context.setContextPath("");
+        context.setWar(new File("."));
+        server.addHandler(context);
+
+        context.addServlet(DriverServlet.class, "/wd/*");
+
+        SelectChannelConnector connector = new SelectChannelConnector();
+        connector.setPort(3001);
+        server.addConnector(connector);
+
+        server.start();
+      }
+    }
+2、远程WebDriver客户端
+要运行远程WebDriver客户端，我们首先需要连接到RemoteWebDriver。为此，我们将URL指向运行测试的服务器的地址。为了自定义我们的配置，我们设置了所需的功能。
+ChromeOptions chromeOptions = new ChromeOptions();
+WebDriver driver = new RemoteWebDriver(new URL("http://www.example.com"), chromeOptions);
+driver.get("http://www.google.com");
+driver.quit();
+    (1)浏览器选项
+       例如，假设您想使用Chrome版本67在Windows XP上运行Chrome：
+       ChromeOptions chromeOptions = new ChromeOptions();
+       chromeOptions.setCapability("browserVersion", "67");
+       chromeOptions.setCapability("platformName", "Windows XP");
+       WebDriver driver = new RemoteWebDriver(new URL("http://www.example.com"), chromeOptions);
+       driver.get("http://www.google.com");
+       driver.quit();
+    （2）本地文件检测器
+       本地文件检测器允许将文件从客户端计算机传输到远程服务器。例如，如果测试需要将文件上传到Web应用程序，则远程WebDriver可以在运行时将文件从本地计算机自动传输到远程Web服务器。这允许从运行测试的远程计算机上载文件。默认情况下未启用它，可以通过以下方式启用：
+       driver.setFileDetector(new LocalFileDetector());
+       driver.get("http://sso.dev.saucelabs.com/test/guinea-file-upload");
+       WebElement upload = driver.findElement(By.id("myfile"));
+       upload.sendKeys("/Users/sso/the/local/path/to/darkbulb.jpg");
+
+建议：
+一、page object 设计模式
+二、DLS 特定领域语言
+三、生成应用程序状态cookie、session
+四、模拟外部服务，使用过程中，mock掉外部服务。
+五、不用做生成报告，Unit报表很受欢迎，可以将结果导入到持续集成（CI）服务器，例如Jenkins，Travis，Bamboo等。
+六、避免共享状态、数据。
+七、测试的独立性
+八、考虑使用Fluent API
+九、每次测试都使用新的浏览器
+
+不要做的时：
+1、验证码：
+    在测试环境中禁用验证码
+    添加一个挂钩以允许测试绕过验证码
+2、身份验证
+    在测试环境中为某些用户禁用2FA，以便您可以在自动化中使用这些用户凭据。
+    在测试环境中禁用2FA。
+    如果您从某些IP登录，请禁用2FA。这样，我们可以配置测试机IP来避免这种情况。
+3、文件下载
+    不适合测试下载的文件
+    Selenium（和所有必需的cookie）找到链接，并将其传递给HTTP请求库，例如 libcurl。
+4、响应码
+    检查状态码不是测试失败的特别重要的细节；之前的步骤更为重要
+5、电子邮件
+    不建议使用WebDriver登录Gmail和Facebook等网站
+    理想的做法是使用电子邮件提供商提供的API，或者对于Facebook，使用开发人员工具服务，该服务公开用于创建测试帐户，朋友等的API。尽管使用API​​似乎有些额外的工作，但您会在速度，可靠性和稳定性上得到回报。该API也不太可能更改，而网页和HTML定位器经常更改，并且需要您更新测试框架。
+6、测试依赖
+    测试应该能够以任何顺序运行，并且不依赖于其他测试才能成功。
+7、性能测试
+    测试应该能够以任何顺序运行，并且不依赖于其他测试才能成功。
+8、链接爬虫
+    不建议使用WebDriver通过链接搜寻
+
+Grid 4
+Selenium Grid允许在远程计算机（虚拟或真实）上执行WebDriver脚本。它旨在提供一种在多台计算机上并行运行测试的简便方法。
+Selenium Grid允许我们在多台计算机上并行运行测试，并集中管理不同的浏览器版本和浏览器配置（而不是在每个单独的测试中）
+Selenium Grid不是灵丹妙药。它解决了一些常见的委派和分发问题，但是例如将无法管理您的基础结构，并且可能不适合您的特定需求。
+
+一、目的和主要功能
+    所有测试的中央入口点
+    管理和控制浏览器运行所在的节点/环境
+    缩放比例
+    并行运行测试
+    跨平台测试
+    负载均衡
+二、何时使用网格
+    要针对多个浏览器，多个版本的浏览器以及在不同操作系统上运行的浏览器运行测试。
+    为了减少测试套件完成测试通过所需的时间。
+
+
+
 
 
 
