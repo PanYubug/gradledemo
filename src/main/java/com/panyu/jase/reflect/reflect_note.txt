@@ -1,11 +1,58 @@
-package com.panyu.jase.reflect;
+反射技术
+是什么
+反射机制：是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。
+做什么
+    在运行时判断任意一个对象所属的类；
+    在运行时构造任意一个类的对象；
+    在运行时判断任意一个类所具有的成员变量和方法；
+    在运行时调用任意一个对象的方法；
+    生成动态代理。
+怎么做
+    最重要的一点：要先获取到那个类
+    如何获取类？发现java已经对字节码文件进行了描述，用的Class类完成的
+    Class clazz = Class.forName(className);
 
-import com.panyu.dao.Person;
+获取class对象的名字
+    获取class对象的
+    1、object getClass发现在反射技术里，该方法不合适，反射技术是不明确具体类的
+    2、所有的数据类型都有自己的Class对象，便是方式很简单
+每一个数据类型都有一个默认的静态的属性。.class，用该属性就可以获取字节码文件对象
+虽然不用对象调用了，还是要用具体的类调用静态属性
+    3、在Class中找到了forName方法，通过名称就可以获取字节码文件对象。重点
+    String name = "con.panyu.springdemo.soundsystem.Person";
+    Class clazz = Class.forName(name);
+    System.out.println(clazz);
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+获取构造函数
+    1、默认构造函数
+    Object obj = clazz.newInstance();
 
+    2、指定构造函数
+    Constructor cons = getConstructor(String.class, int.class);
+    Object obj =con.newInstance("lisi", 12)
+
+获取指定age字段
+    1、只能拿到public字段
+    Field field = clazz.getField("age")
+    2、获取已声明的字段
+    Field field = clazz.getDeclaredField("age")
+    3、返回一个Method对象。
+    Method method = clazz.getDeclaredMethod("run")
+
+
+暴力访问
+    使用父类的方法将访问权限检查能力取消
+    field.setAccessiable(true);
+
+invoke调用方法
+    1、非静态，无参数
+    2、静态，无参数
+    Method method = clazz.getDeclaredMethod("方法名")
+    method.invoke(class.newInstance());
+    3、非静态，有参数
+    Method method = clazz.getDeclaredMethod("方法名"，String.class，int.class)
+    method.invoke(class.newInstance(), "string", 2);
+例
 public class ReflectDemo {
 
     public static void main(String[] args) throws Exception {
@@ -14,53 +61,44 @@ public class ReflectDemo {
         Class clazz = Class.forName(name);
         System.out.println("clazz的反射类为：" + clazz);
         // 获取构造函数
-        // 1、获取构造函数,默认构造函数，生成实例对象
+        // 1、获取构造函数,默认构造函数
         Object person = clazz.newInstance();
         System.out.println("clazz默认构造函数为： " + person.toString());
-
-        // 2、获取指定构造函数，生成实例对象
+        // 2、获取指定构造函数
         Constructor constructor = clazz.getConstructor(String.class, int.class);
         Person zhangsan = (Person) constructor.newInstance("zhangsan", 22);
         System.out.println("zhangsan的实例为： " + zhangsan.toString());
-
-        // 1、获取所有的构造函数
+        // 3、获取所有的构造函数
         Constructor[] constructors = clazz.getConstructors();
-        System.out.println("clazz的构造函数的参数有：");
-        int i = 0;
+        System.out.print("clazz的构造函数的参数有：");
         for (Constructor constructor1 : constructors) {
             Class[] clazzList = constructor1.getParameterTypes();
             for (Class clazz1 : clazzList) {
-                i++;
-                System.out.print(String.format("第%s个构造函数是: ", i));
                 System.out.println(clazz1.getName());
-
             }
         }
         // 获取字段
         // 1、只能拿到public
         Field fieldName = clazz.getField("name");
-        System.out.print("公有参数name: " + fieldName + "  ");
-        System.out.println("value: " + fieldName.get(zhangsan));
+        System.out.print("name: " + fieldName);
+        System.out.println("value：" + fieldName.get(zhangsan));
         // 2、获取指定字段
         Field fieldAge = clazz.getDeclaredField("age");
-        System.out.print("私有参数age: " + fieldAge + "  ");
+        System.out.print("age: " + fieldAge);
         // 2.1 暴力获取
         fieldAge.setAccessible(true);
-        System.out.println("暴力获取的带的value：" + fieldAge.get(zhangsan));
+        System.out.println("value：" + fieldAge.get(zhangsan));
         // 3、获取所有字段
         Field[] fields = clazz.getDeclaredFields();
-        System.out.println("获取clazz的所有字段有：");
-        int j = 0;
+        System.out.println("clazz的所有字段有：");
         for (Field field1 : fields) {
-            j++;
-            System.out.print(String.format("第%s个参数: ", j));
             System.out.println(field1);
         }
         // 获取方法
         // 1、获取指定方法
         Class<?> aClass = Class.forName("com.panyu.jase.reflect.ReflectDemo");
         Method methodReflect = aClass.getDeclaredMethod("reflectMethod", String.class, int.class);
-        System.out.println("获取指定方法reflectMethod：" + methodReflect);
+        System.out.println("reflectMethod：" + methodReflect);
         // 2、获取所有方法
         Method[] declaredMethods = clazz.getDeclaredMethods();
         System.out.println("clazz方法有：");
@@ -87,10 +125,10 @@ public class ReflectDemo {
         }
     }
 
-
     private void reflectMethod(String name, int age) {
         System.out.print("反射机制，调用方法——");
         System.out.println("name：" + name + "，age:" + age);
     }
 
 }
+

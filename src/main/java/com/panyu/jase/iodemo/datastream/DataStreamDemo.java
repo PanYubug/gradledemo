@@ -6,7 +6,6 @@ public class DataStreamDemo {
 
     public static void main(String[] args) throws IOException {
 
-
 //        writeData();
         readData();
     }

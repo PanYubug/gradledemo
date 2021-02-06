@@ -13,13 +13,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    // 优先使用本地，然后国内，
     mavenLocal()
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.testng', name: 'testng', version:'6.14.3'
 
@@ -31,9 +31,14 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.2.RELEASE'
     compile group: 'org.springframework', name: 'spring-context', version: '5.2.2.RELEASE'
     compile group: 'org.springframework', name: 'spring-beans', version: '5.2.2.RELEASE'
-    
     compile group: 'org.springframework', name: 'spring-AnnotationDemo', version: '5.2.2.RELEASE'
+
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-AnnotationDemo', version: '2.2.2.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.4.2'
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.1.4'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.4.2'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.4.2'
+
 
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
     compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
@@ -43,6 +48,8 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.75'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+
 
     compile group: 'org.mybatis', name: 'mybatis', version: '3.5.5'
     compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.5'
