@@ -20,7 +20,6 @@ public class FileOutputStreamDemo {
             // 2、调用输出流的写功能，字符转字节。
             fos.write((LINE_SEPARATOR + "abcd").getBytes());
             // 3、必须关闭，释放资源
-
         } catch (IOException e) {
             System.out.println(e.toString() + "----");
 

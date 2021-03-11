@@ -1,5 +1,6 @@
 package com.panyu.jase.iodemo;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -8,15 +9,20 @@ public class FileInputStreamDemo {
     private static final int DEFAULT_SIZE = 1024;
 
     public static void main(String[] args) {
+        readFile();
+
+    }
+
+    public static void readFile() {
         /**
          * 读取文件数据
          */
         FileInputStream fis = null;
 
-//        File file = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/Person.java");
-//        if (!file.exists()){
-//            throw RuntimeException("文件不存在");
-//        }
+        File file = new File("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/Person.java");
+        if (!file.exists()){
+            throw new RuntimeException("文件不存在");
+        }
 
         try {
             fis = new FileInputStream("/Users/panyu/java_projects/gradledemo/src/main/java/com/panyu/Person.java");
@@ -38,6 +44,5 @@ public class FileInputStreamDemo {
                 }
             }
         }
-
     }
 }
