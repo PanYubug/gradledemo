@@ -32,7 +32,6 @@ public class ForkJoinCalculate extends RecursiveTask<Long> {
 
             ForkJoinCalculate right = new ForkJoinCalculate(middle + 1, end);
             right.fork();
-
             return left.join() + right.join();
         }
     }
