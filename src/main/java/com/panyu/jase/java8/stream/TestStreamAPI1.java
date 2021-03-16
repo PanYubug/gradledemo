@@ -1,4 +1,4 @@
-package com.panyu.jase.java8;
+package com.panyu.jase.java8.stream;
 
 
 import com.panyu.dao.Person;
